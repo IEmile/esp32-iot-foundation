@@ -21,6 +21,7 @@ int main(){
         .time=time(NULL)
     };
     int count=0;
+    srand(time(NULL));
     printf("\nData at: %s",ctime(&sensor_data.time));
     printf("\nStatus: %d", sensor_data.status);
     printf("\nHumidity: %.2f", sensor_data.humidity);
@@ -42,7 +43,6 @@ int main(){
 }
 void get_sensor_data(const sensor_t *ptr){
     time_t currentTime=time(NULL);
-    srand(time(NULL));
     printf("\n\nData at: %s",ctime(&currentTime));
     printf("\nStatus: %d", ptr->status);
     printf("\nHumidity: %.2f", ptr->humidity-rand()%5);
