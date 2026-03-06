@@ -21,6 +21,7 @@ int main(){
 };
     // sensor_data_t *ptr = &data;
     sensor_test(&data);
+    getchar();
     return 0;
 }
 void sensor_test(const sensor_data_t *data){
