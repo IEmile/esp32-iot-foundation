@@ -13,4 +13,16 @@ $@ - points to the current target being built
 $^ - Refers to the entire list of files the target depens on
 $< - Refers only to the first file in the dependency list
 
+| Concept             | Status |
+| ------------------- | ------ |
+| C fundamentals      | ✅      |
+| Memory model        | ✅      |
+| Compilation         | ✅      |
+| Architecture layers | ✅      |
+| Interrupts          | ✅      |
+| State machines      | ✅      |
+| Timers              | ✅      |
+| Events              | ✅      |
+
+
 
