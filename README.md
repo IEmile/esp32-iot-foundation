@@ -24,5 +24,7 @@ $< - Refers only to the first file in the dependency list
 | Timers              | ✅      |
 | Events              | ✅      |
 
+# Staring with ESP IDF
+install esp-idf and chech compatibility. 
 
 
