@@ -11,23 +11,23 @@ int game(char user, char computer){
     if(user == computer){
         return 0;
     }
+
     if(user == 's' && computer == 'p'){
         return 1;
+    }else if(user == 'p' && computer == 's'){
+        return -1;
     }
+
     if(user == 's' && computer == 'r'){
         return -1;
+    }else if(user == 'r' && computer == 's'){
+        return 1;
     }
-    if(user == 'p' && computer == 's'){
-        return -1;
-    }
+
     if(user == 'p' && computer == 'r'){
         return 1;
-    }
-    if(user == 'r' && computer == 'p'){
+    } else if(user == 'r' && computer == 'p'){
         return -1;
-    }
-    if(user == 'r' && computer == 's'){
-        return 1;
     }
     return 2;
 }
