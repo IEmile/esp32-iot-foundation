@@ -24,7 +24,8 @@ $< - Refers only to the first file in the dependency list
 | Timers              | ✅      |
 | Events              | ✅      |
 
-# Staring with ESP IDF
-install esp-idf and chech compatibility. 
+# Starting with ESP IDF
+0. install esp-idf and chech compatibility. 
+1. We will start by using predefined drivers from idf or pre-sourced on github.
 
 
