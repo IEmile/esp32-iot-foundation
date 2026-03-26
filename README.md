@@ -57,4 +57,4 @@ Understanding I2C driver, adressing, and command sending    | i2c.h -using i2c b
             │              │
             │  UART → Output
             └──────────────┘
-- Combined all the above projects in on file with comments to explain and visualize easly.
+- Combined all the above projects in on file with comments to explain and visualize easly;
