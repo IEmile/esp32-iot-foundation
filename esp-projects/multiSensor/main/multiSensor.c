@@ -16,6 +16,13 @@
 #define I2C_MASTER_NUM I2C_NUM_0
 #define BH1750_ADDR 0x23
 
+
+#define TEMP_THRESHOLD 30.0
+#define HUM_THRESHOLD 70.0
+#define LIGHT_THRESHOLD 50
+
+int last_motion = 0;
+
 void i2c_master_init()
 {
     i2c_config_t conf = {
@@ -78,7 +85,35 @@ void app_main(void)
 
         printf("Light: %d lux\n", lux);
 
-        printf("=======================\n");
+        printf("---- SYSTEM STATUS ----\n");
+
+        // Motion alert (only when it changes)
+        if (motion && !last_motion)
+        {
+            printf("🚨 ALERT: Motion detected!\n");
+        }
+
+        // Intrusion logic
+        if (motion && lux < LIGHT_THRESHOLD)
+        {
+            printf("⚠️ Possible intrusion (motion in darkness)\n");
+        }
+
+        // Temperature warning
+        if (temperature > TEMP_THRESHOLD)
+        {
+            printf("🔥 High temperature warning!\n");
+        }
+
+        // Humidity warning
+        if (humidity > HUM_THRESHOLD)
+        {
+            printf("💧 High humidity warning!\n");
+        }
+
+        last_motion = motion;
+
+        // printf("=======================\n");
 
         vTaskDelay(2000 / portTICK_PERIOD_MS);
     }
