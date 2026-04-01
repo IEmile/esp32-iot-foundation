@@ -15,8 +15,8 @@ SemaphoreHandle_t data_mutex;
 #define PIR_PIN GPIO_NUM_14 //Define the PIR reading pin
 #define DHT_PIN GPIO_NUM_4 //Define the DHT port
 #define DHT_TYPE DHT_TYPE_AM2301 //Define the DHT sensor type. 
-#define I2C_MASTER_SCL_IO 22
-#define I2C_MASTER_SDA_IO 21
+#define I2C_MASTER_SCL_IO 19
+#define I2C_MASTER_SDA_IO 18
 #define I2C_MASTER_NUM I2C_NUM_0
 #define BH1750_ADDR 0x23
 
