@@ -25,6 +25,16 @@ SemaphoreHandle_t data_mutex;
 #define HUM_THRESHOLD 70.0
 #define LIGHT_THRESHOLD 50
 
+static void IRAM_ATTR motion_isr_handler(void* arg)
+{
+    BaseType_t xHigherPriorityTaskWoken = pdFALSE;
+
+    xSemaphoreGiveFromISR(data_mutex, &xHigherPriorityTaskWoken);
+
+    if (xHigherPriorityTaskWoken)
+        portYIELD_FROM_ISR();
+}
+
 int last_motion = 0;
 
 void i2c_master_init()
@@ -71,16 +81,18 @@ typedef struct
 
 sensor_data_t data;
 
-void motion_task(void* pv)
+void motion_task(void *pv)
 {
-    while(1)
+    while (1)
     {
-        int motion = gpio_get_level(PIR_PIN);
+        if (xSemaphoreTake(data_mutex, portMAX_DELAY))
+        {
+            int motion = gpio_get_level(PIR_PIN);
 
-        xSemaphoreTake(data_mutex, portMAX_DELAY);
-        data.motion = motion;
-        xSemaphoreGive(data_mutex);
-        vTaskDelay(200 / portTICK_PERIOD_MS);
+            printf("🚨 INTERRUPT: Motion detected!\n");
+
+            xSemaphoreGive(data_mutex);
+        }
     }
 }
 
@@ -156,7 +168,10 @@ void app_main(void)
 {
     data_mutex = xSemaphoreCreateMutex();
     gpio_set_direction(PIR_PIN, GPIO_MODE_INPUT); // Set pir pin as an input pin
+    gpio_set_intr_type(PIR_PIN, GPIO_INTR_POSEDGE); //Create an interupt
     gpio_pulldown_en(PIR_PIN); // Add a pull-down on pir pin to set 0 as default
+    gpio_install_isr_service(0);
+    gpio_isr_handler_add(PIR_PIN, motion_isr_handler, NULL);
     i2c_master_init();
 
     vTaskDelay(2000 / portTICK_PERIOD_MS); // stabilize sensors by using the longest delay.
