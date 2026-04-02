@@ -81,20 +81,34 @@ typedef struct
 
 sensor_data_t data;
 
-void motion_task(void *pv)
+void motion_task(void* pv)
 {
-    while (1)
+    while(1)
     {
+        int motion = gpio_get_level(PIR_PIN);
+
         if (xSemaphoreTake(data_mutex, portMAX_DELAY))
         {
-            int motion = gpio_get_level(PIR_PIN);
-
+            data.motion = motion;
             printf("🚨 INTERRUPT: Motion detected!\n");
-
             xSemaphoreGive(data_mutex);
         }
     }
 }
+// void motion_task(void *pv)
+// {
+//     while (1)
+//     {
+//         if (xSemaphoreTake(data_mutex, portMAX_DELAY))
+//         {
+//             int motion = gpio_get_level(PIR_PIN);
+
+//             printf("🚨 INTERRUPT: Motion detected!\n");
+
+//             xSemaphoreGive(data_mutex);
+//         }
+//     }
+// }
 
 void dht_task(void* pv)
 {
