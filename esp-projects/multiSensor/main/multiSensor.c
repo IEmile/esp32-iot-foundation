@@ -9,6 +9,7 @@
                 
 
 SemaphoreHandle_t data_mutex;
+SemaphoreHandle_t motion_semaphore;
 
 
 
@@ -25,11 +26,20 @@ SemaphoreHandle_t data_mutex;
 #define HUM_THRESHOLD 70.0
 #define LIGHT_THRESHOLD 50
 
+// static void IRAM_ATTR motion_isr_handler(void* arg)
+// {
+//     BaseType_t xHigherPriorityTaskWoken = pdFALSE;
+
+//     xSemaphoreGiveFromISR(data_mutex, &xHigherPriorityTaskWoken);
+
+//     if (xHigherPriorityTaskWoken)
+//         portYIELD_FROM_ISR();
+// }
 static void IRAM_ATTR motion_isr_handler(void* arg)
 {
     BaseType_t xHigherPriorityTaskWoken = pdFALSE;
 
-    xSemaphoreGiveFromISR(data_mutex, &xHigherPriorityTaskWoken);
+    xSemaphoreGiveFromISR(motion_semaphore, &xHigherPriorityTaskWoken);
 
     if (xHigherPriorityTaskWoken)
         portYIELD_FROM_ISR();
@@ -181,6 +191,7 @@ void logic_task(void* pv){
 void app_main(void)
 {
     data_mutex = xSemaphoreCreateMutex();
+    motion_semaphore = xSemaphoreCreateBinary();
     gpio_set_direction(PIR_PIN, GPIO_MODE_INPUT); // Set pir pin as an input pin
     gpio_set_intr_type(PIR_PIN, GPIO_INTR_POSEDGE); //Create an interupt
     gpio_pulldown_en(PIR_PIN); // Add a pull-down on pir pin to set 0 as default
