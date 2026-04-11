@@ -1,13 +1,38 @@
-#include "freertos/semphr.h"
 #include "motion.h"
-int motion_task(*pv){
-    int motionState = 0;
-    // while(1){
-        if (xSemaphoreTake(motion_semaphore, portMAX_DELAY))
+#include "sensor_data"
+#include <stdio.h>
+
+SemaphoreHandle_t motion_semaphore;
+
+static void IRAM_ATTR motion_isr_handler(void* arg)
+{
+    BaseType_t xHigherPriorityTaskWoken = pdFALSE;
+
+    xSemaphoreGiveFromISR(motion_semaphore, &xHigherPriorityTaskWoken);
+
+    if (xHigherPriorityTaskWoken)
+        portYIELD_FROM_ISR();
+}
+
+void motion_task(void *pv)
+{
+    int last_motion = 0;
+
+    while (1)
+    {
+        int motion = gpio_get_level(PIR_PIN);
+
+        xSemaphoreTake(data_mutex, portMAX_DELAY);
+        data.motion = motion;
+        xSemaphoreGive(data_mutex);
+
+        if (motion && !last_motion)
         {
-            printf("🚨 INTERRUPT: Motion detected!\n");
-            motionState = 1;
+            printf("🚨 Motion detected!\n");
         }
-    // }
-    return motionState;
+
+        last_motion = motion;
+
+        vTaskDelay(100 / portTICK_PERIOD_MS);
+    }
 }
