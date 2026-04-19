@@ -6,6 +6,7 @@
 #include "motion_sensor.h"
 #include "light_sensor.h"
 #include "dht_sensor.h"
+#include "system_logic.h"
 
 void app_main(void)
 {
@@ -19,7 +20,7 @@ void app_main(void)
     xTaskCreate(motion_task, "motion_task", 2048, NULL, 5, NULL);
     xTaskCreate(dht_task, "dht_task", 4096, NULL, 5, NULL);
     xTaskCreate(light_task, "light_task", 2048, NULL, 5, NULL);
-//     xTaskCreate(logic_task, "logic_task", 4096, NULL, 5, NULL);
+    xTaskCreate(logic_task, "logic_task", 4096, NULL, 5, NULL);
 
 
 
